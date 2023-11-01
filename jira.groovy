@@ -197,9 +197,6 @@ def strJiraProjectFolder() {
 
 
 
-
-
-
 def sendGetRequest(url, username, password) {
 	println("url = " + url)
 	def conn = new URL(url).openConnection()
