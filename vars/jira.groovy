@@ -203,7 +203,7 @@ def sendGetRequest(url, username, password) {
 	conn.requestMethod = 'GET'
 	def code = conn.getResponseCode()
 	def content = conn.getInputStream().getText()
-	println("http code" + code)
+	//println("http code: " + code)
 	return [code, content]
 }
 
@@ -295,7 +295,7 @@ def updateJiraTestCaseStatus(jenkinsContext) {
 		def folderId = ""
 		def executionId = ""
 		
-		def jsonSlurper = new groovy.json.JsonSlurperClassic()
+		// def jsonSlurper = new groovy.json.JsonSlurperClassic()
 		// Get Project Version ID
 		(code, content) = sendGetRequest(jiraBaseURL+"/rest/api/latest/project/"+project+"/versions", username, password)
 		assert code == 200
@@ -329,10 +329,10 @@ def updateJiraTestCaseStatus(jenkinsContext) {
 		(code, content) = sendGetRequest(jiraBaseURL+"/rest/zapi/latest/execution?cycleId="+cycleId+"&folderId="+folderId, username, password)
 		assert code == 200
 		executions = parseJson(content).executions
+		println("I am here after executions = parseJson(content).executions")
 		if (executions.size() > 0) {
 			def xml = readFile junitFile
 			def testcases = new groovy.util.XmlParser().parseText(xml).value()
-			//def testcases = new groovy.util.XmlParser().parseText(xml).testcase
 			testcases.each {
 				issue = it.attributes()['name']
 				failure = it.value()
