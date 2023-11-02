@@ -58,7 +58,7 @@ def strJiraProjectVersion() {
 		def jsonSlurper = new JsonSlurper()
 		def url = jiraBaseURL+"/rest/api/latest/project/"+project+"/versions"
 		(code, content) = sendGetRequest(url, username, password)
-		jsonResponse = parseJson(context)
+		jsonResponse = parseJson(content)
 		jsonResponse.each {
 			if (it.released == false) {
 				versionList.add(it.name)
@@ -123,7 +123,7 @@ def strJiraProjectCycle() {
 		(code, content) = sendGetRequest(url, username, password)
 		//assert code == 200
 		
-		jsonResponse = parseJson(context)
+		jsonResponse = parseJson(content)
 		jsonResponse.each {
 			if (it.key != "recordsCount") {
 				cycleNameList.add(it.value.name)
@@ -185,7 +185,7 @@ def strJiraProjectFolder() {
 		(code, content) = sendGetRequest(url, username, password)
 		//assert code == 200
 		
-		jsonResponse = parseJson(context)
+		jsonResponse = parseJson(content)
 		jsonResponse.each {
 			folderNameList.add(it.folderName)
 		}
@@ -299,7 +299,7 @@ def updateJiraTestCaseStatus(jenkinsContext) {
 		// Get Project Version ID
 		(code, content) = sendGetRequest(jiraBaseURL+"/rest/api/latest/project/"+project+"/versions", username, password)
 		assert code == 200
-		jsonResponse = parseJson(context)
+		jsonResponse = parseJson(content)
 		projectId = jsonResponse.find {it.name == version}.projectId
 		versionId = jsonResponse.find {it.name == version}.id
 		
@@ -308,7 +308,7 @@ def updateJiraTestCaseStatus(jenkinsContext) {
 		
 		(code, content) = sendGetRequest(jiraBaseURL+"/rest/zapi/latest/cycle?projectId="+projectId+"&versionId="+versionId, username, password)
 		assert code == 200
-		jsonResponse = parseJson(context)
+		jsonResponse = parseJson(content)
 		cycleId = jsonResponse.findAll {it.key != "recordsCount"}.find{it.value.name == cycle}.key
 		
 		//println("cycleId = " + cycleId)
@@ -316,7 +316,7 @@ def updateJiraTestCaseStatus(jenkinsContext) {
 		// Get Folder ID						
 		(code, content) = sendGetRequest(jiraBaseURL+"/rest/zapi/latest/cycle/"+cycleId+"/folders?projectId="+projectId+"&versionId="+versionId, username, password)
 		assert code == 200
-		jsonResponse = parseJson(context)
+		jsonResponse = parseJson(content)
 		folderId = jsonResponse.find {it.folderName == folder}?.folderId
 		if (folderId == null) {
 			folderId = ""
@@ -328,7 +328,7 @@ def updateJiraTestCaseStatus(jenkinsContext) {
 		println("--------------------------------------------------")
 		(code, content) = sendGetRequest(jiraBaseURL+"/rest/zapi/latest/execution?cycleId="+cycleId+"&folderId="+folderId, username, password)
 		assert code == 200
-		executions = parseJson(context).executions
+		executions = parseJson(content).executions
 		if (executions.size() > 0) {
 			def xml = readFile junitFile
 			def testcases = new groovy.util.XmlParser().parseText(xml).value()
@@ -431,7 +431,7 @@ def updateJiraTestCaseStatusForMultiSuites(jenkinsContext, projectList) {
 		if (cycleDict.size() == 0) {
 			(code, content) = sendGetRequest(jiraBaseURL+"/rest/api/latest/project/"+project+"/versions", username, password)
 			assert code == 200
-			jsonResponse = parseJson(context)
+			jsonResponse = parseJson(content)
 			projectId = jsonResponse.find {it.name == version}?.projectId
 			if (projectId == null) {
 				println("Cannot find version " + version)
@@ -444,7 +444,7 @@ def updateJiraTestCaseStatusForMultiSuites(jenkinsContext, projectList) {
 
 			(code, content) = sendGetRequest(jiraBaseURL+"/rest/zapi/latest/cycle?projectId="+projectId+"&versionId="+versionId, username, password)
 			assert code == 200
-			jsonResponse = parseJson(context)
+			jsonResponse = parseJson(content)
 			cycleDict = jsonResponse
 		}
 		cycleId = cycleDict.findAll {it.key != "recordsCount"}.find{it.value.name == cycle}?.key
@@ -458,7 +458,7 @@ def updateJiraTestCaseStatusForMultiSuites(jenkinsContext, projectList) {
 		// Get Folder ID                    
 		(code, content) = sendGetRequest(jiraBaseURL+"/rest/zapi/latest/cycle/"+cycleId+"/folders?projectId="+projectId+"&versionId="+versionId, username, password)
 		assert code == 200
-		jsonResponse = parseJson(context)
+		jsonResponse = parseJson(content)
 		folderId = jsonResponse.find {it.folderName == folder}?.folderId
 		if (folderId == null) {
 			folderId = ""
@@ -470,7 +470,7 @@ def updateJiraTestCaseStatusForMultiSuites(jenkinsContext, projectList) {
 		println("--------------------------------------------------")
 		(code, content) = sendGetRequest(jiraBaseURL+"/rest/zapi/latest/execution?cycleId="+cycleId+"&folderId="+folderId, username, password)
 		assert code == 200
-		executions = parseJson(context).executions
+		executions = parseJson(content).executions
 		if (executions.size() > 0) {
 			def xml = readFile junitFile
 			def testcases = new groovy.util.XmlParser().parseText(xml).value()
