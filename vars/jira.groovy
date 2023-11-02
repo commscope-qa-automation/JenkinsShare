@@ -8,7 +8,7 @@ def strGetRequest() {
 			conn.requestMethod = 'GET'
 			def code = conn.getResponseCode()
 			def content = conn.getInputStream().getText()
-			return [code, content]
+			return content
 		}
 	'''
 }
