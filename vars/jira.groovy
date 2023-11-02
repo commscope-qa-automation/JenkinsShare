@@ -15,7 +15,7 @@ def strGetRequest() {
 			conn.requestMethod = 'GET'
 			def code = conn.getResponseCode()
 			def content = conn.getInputStream().getText()
-			return [code, content]
+			return content
 		}
 	'''
 }
@@ -57,7 +57,7 @@ def strJiraProjectVersion() {
 		
 		def jsonSlurper = new JsonSlurper()
 		def url = jiraBaseURL+"/rest/api/latest/project/"+project+"/versions"
-		(code, content) = sendGetRequest(url, username, password)
+		content = sendGetRequest(url, username, password)
 		jsonResponse = parseJson(content)
 		jsonResponse.each {
 			if (it.released == false) {
@@ -120,7 +120,7 @@ def strJiraProjectCycle() {
 		}
 		
 		def url = jiraBaseURL+"/rest/zapi/latest/cycle?projectId="+projectId+"&versionId="+versionId
-		(code, content) = sendGetRequest(url, username, password)
+		content = sendGetRequest(url, username, password)
 		//assert code == 200
 		
 		jsonResponse = parseJson(content)
@@ -182,7 +182,7 @@ def strJiraProjectFolder() {
 		}
 		
 		def url = jiraBaseURL+"/rest/zapi/latest/cycle/"+cycleId+"/folders?projectId="+projectId+"&versionId="+versionId
-		(code, content) = sendGetRequest(url, username, password)
+		content = sendGetRequest(url, username, password)
 		//assert code == 200
 		
 		jsonResponse = parseJson(content)
