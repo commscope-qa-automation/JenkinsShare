@@ -252,7 +252,6 @@ def updateJiraTestCaseStatus(jenkinsContext) {
 	} else {					
 		// Get Etrack username and password from global credentials
 		println("Get Etrack credentials.")
-		//println("LOGIN_USER:" + LOGIN_USER)
 		
 		def username = ""
 		def password = ""
@@ -263,7 +262,7 @@ def updateJiraTestCaseStatus(jenkinsContext) {
 			null
 		)
 		for (c in creds) {
-			if (c.id == "etrack_creds_" + LOGIN_USER) {
+			if (c.id == "etrack_creds_" + jenkinsContext.env.LOGIN_USER) {
 				username = c.username
 				password = c.password
 			}
