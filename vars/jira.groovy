@@ -58,7 +58,7 @@ def strJiraProjectVersion() {
 		def jsonSlurper = new JsonSlurper()
 		def url = jiraBaseURL+"/rest/api/latest/project/"+project+"/versions"
 		content = sendGetRequest(url, username, password)
-		jsonResponse = parseJson(content)
+		jsonResponse = JsonSlurper.parseJson(content)
 		jsonResponse.each {
 			if (it.released == false) {
 				versionList.add(it.name)
@@ -123,7 +123,7 @@ def strJiraProjectCycle() {
 		content = sendGetRequest(url, username, password)
 		//assert code == 200
 		
-		jsonResponse = parseJson(content)
+		jsonResponse = JsonSlurper.parseJson(content)
 		jsonResponse.each {
 			if (it.key != "recordsCount") {
 				cycleNameList.add(it.value.name)
@@ -185,7 +185,7 @@ def strJiraProjectFolder() {
 		content = sendGetRequest(url, username, password)
 		//assert code == 200
 		
-		jsonResponse = parseJson(content)
+		jsonResponse = JsonSlurper.parseJson(content)
 		jsonResponse.each {
 			folderNameList.add(it.folderName)
 		}
