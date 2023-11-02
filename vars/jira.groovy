@@ -286,7 +286,7 @@ def updateJiraTestCaseStatus(jenkinsContext) {
 		def folderId = ""
 		def executionId = ""
 		
-		def jsonSlurper = new groovy.json.JsonSlurper()
+		def jsonSlurper = new groovy.json.JsonSlurperClassic()
 		// Get Project Version ID
 		(code, content) = sendGetRequest(jiraBaseURL+"/rest/api/latest/project/"+project+"/versions", username, password)
 		assert code == 200
@@ -417,7 +417,7 @@ def updateJiraTestCaseStatusForMultiSuites(jenkinsContext, projectList) {
 		def cycleId = ""
 		def folderId = ""
 		def executionId = ""
-		def jsonSlurper = new groovy.json.JsonSlurper()
+		def jsonSlurper = new groovy.json.JsonSlurperClassic()
 		// Get Project Version ID
 		if (cycleDict.size() == 0) {
 			(code, content) = sendGetRequest(jiraBaseURL+"/rest/api/latest/project/"+project+"/versions", username, password)
