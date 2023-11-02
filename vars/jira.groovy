@@ -234,15 +234,10 @@ def updateJiraTestCaseStatus(jenkinsContext) {
 	Get values from build parameters
 	##################################################
 	*/
-	// def version = params.ProjectVersion
-	// def cycle = params.ProjectCycle
-	// def folder = params.ProjectFolder
-	
-	//def robotResultPath = params.OutputDir
-	//def testsuiteName= params.TestSuiteName
-	
-	//def workspace = env.WORKSPACE
-	//def junitFile = workspace + "/" + outputDir + "/" + testsuiteName + "_junit.xml"
+	def version = jenkinsContext.params.ProjectVersion
+	def cycle = jenkinsContext.params.ProjectCycle
+	def folder = jenkinsContext.params.ProjectFolder
+
 	def junitFile = jenkinsContext.env.WORKSPACE + "/" + jenkinsContext.params.OutputDir + "/" + jenkinsContext.params.TestSuiteName + "_junit.xml"
 	//println("junit xml file: " + junitFile)
 	/*
