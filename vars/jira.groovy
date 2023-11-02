@@ -8,7 +8,7 @@ def strGetRequest() {
 			conn.requestMethod = 'GET'
 			def code = conn.getResponseCode()
 			def content = conn.getInputStream().getText()
-			return content
+			return [code, content]
 		}
 	'''
 }
@@ -50,7 +50,7 @@ def strJiraProjectVersion() {
 		
 		def jsonSlurper = new JsonSlurper()
 		def url = jiraBaseURL+"/rest/api/latest/project/"+project+"/versions"
-		content = sendGetRequest(url, username, password)
+		(code, content) = sendGetRequest(url, username, password)
 		jsonResponse = jsonSlurper.parseText(content)
 		jsonResponse.each {
 			if (it.released == false) {
@@ -113,7 +113,7 @@ def strJiraProjectCycle() {
 		}
 		
 		def url = jiraBaseURL+"/rest/zapi/latest/cycle?projectId="+projectId+"&versionId="+versionId
-		content = sendGetRequest(url, username, password)
+		(code, content) = sendGetRequest(url, username, password)
 		//assert code == 200
 		
 		jsonResponse = jsonSlurper.parseText(content)
@@ -175,7 +175,7 @@ def strJiraProjectFolder() {
 		}
 		
 		def url = jiraBaseURL+"/rest/zapi/latest/cycle/"+cycleId+"/folders?projectId="+projectId+"&versionId="+versionId
-		content = sendGetRequest(url, username, password)
+		(code, content) = sendGetRequest(url, username, password)
 		//assert code == 200
 		
 		jsonResponse = jsonSlurper.parseText(content)
@@ -286,7 +286,7 @@ def updateJiraTestCaseStatus(jenkinsContext) {
 		def folderId = ""
 		def executionId = ""
 		
-		def jsonSlurper = new groovy.json.JsonSlurperClassic()
+		def jsonSlurper = new groovy.json.JsonSlurper()
 		// Get Project Version ID
 		(code, content) = sendGetRequest(jiraBaseURL+"/rest/api/latest/project/"+project+"/versions", username, password)
 		assert code == 200
@@ -417,7 +417,7 @@ def updateJiraTestCaseStatusForMultiSuites(jenkinsContext, projectList) {
 		def cycleId = ""
 		def folderId = ""
 		def executionId = ""
-		def jsonSlurper = new groovy.json.JsonSlurperClassic()
+		def jsonSlurper = new groovy.json.JsonSlurper()
 		// Get Project Version ID
 		if (cycleDict.size() == 0) {
 			(code, content) = sendGetRequest(jiraBaseURL+"/rest/api/latest/project/"+project+"/versions", username, password)
@@ -432,9 +432,7 @@ def updateJiraTestCaseStatusForMultiSuites(jenkinsContext, projectList) {
 			
 			//println("projectId = " + projectId)
 			//println("versionId = " + versionId)                        
-		}
-		
-		if (cycleDict.size() == 0) {
+
 			(code, content) = sendGetRequest(jiraBaseURL+"/rest/zapi/latest/cycle?projectId="+projectId+"&versionId="+versionId, username, password)
 			assert code == 200
 			jsonResponse = jsonSlurper.parseText(content)
