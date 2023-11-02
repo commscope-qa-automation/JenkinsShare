@@ -196,7 +196,7 @@ def sendGetRequest(url, username, password) {
 	conn.requestMethod = 'GET'
 	def code = conn.getResponseCode()
 	def content = conn.getInputStream().getText()
-	//println("http code" + code)
+	println("http code" + code)
 	return [code, content]
 }
 
@@ -267,8 +267,8 @@ def updateJiraTestCaseStatus(jenkinsContext) {
 				password = c.password
 			}
 		}
-		//println("username:" + username)
-		//println("password:" + password)
+		println("username:" + username)
+		println("password:" + password)
 		
 		// Update JIRA test case status
 		println("Start updating Etrack test case status.")
@@ -345,5 +345,149 @@ def updateJiraTestCaseStatus(jenkinsContext) {
 		} else {
 			println("No executions...")
 		} 
+	}
+}
+
+def updateJiraTestCaseStatusForMultiSuites(jenkinsContext, projectList) {
+	/*
+	########################################################################
+	Start JIRA
+	########################################################################
+	*/                
+	def cycleDict = [:]
+	def projectId = ""
+	def versionId = ""
+	for (i=0 ; i<projectList.size() ; i+=4) {
+		/*
+		########################################################################
+		Get values from build parameters
+		########################################################################
+		*/
+		def version = projectList[i]  //params.ProjectVersion
+		def cycle = projectList[i+1]  //params.ProjectCycle
+		def folder = projectList[i+2]  //params.ProjectFolder
+		
+		def testsuiteName= projectList[i+3]
+
+		def junitFile = jenkinsContext.env.WORKSPACE + "/" + jenkinsContext.params.OutputDir + "/" + testsuiteName + "_" + cycle.replaceAll(" ", "") + "_junit.xml"
+		//println("junit xml file: " + junitFile)
+		/*
+		########################################################################
+		Start processing
+		########################################################################
+		*/
+		println("-----------------------------------------------------------------------------")
+		if (version == "" || cycle == "") {
+			println("Version or Cycle is not provided. No test case status update!!!")
+			println("-----------------------------------------------------------------------------")
+			return
+		}
+		
+		// Get JIRA username and password from global credentials
+		println("Get JIRA credentials.")
+		//println("LOGIN_USER:" + LOGIN_USER)
+		
+		def username = ""
+		def password = ""
+		def creds = com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredentials(
+			com.cloudbees.plugins.credentials.common.StandardUsernameCredentials.class,
+			jenkins.model.Jenkins.instance,
+			null,
+			null
+		)
+		for (c in creds) {
+			if (c.id == "etrack_creds_" + LOGIN_USER) {
+				username = c.username
+				password = c.password
+			}
+		}
+		//println("username:" + username)
+		//println("password:" + password)
+		
+		// Update JIRA test case status
+		println("Start updating JIRA test case status.")
+		def jiraBaseURL = "https://odart.arrisi.com"
+		def project = "ECOIOT"
+		
+		// Read the junit file generated from Robot Framework
+		def issue = ""
+		def code = 0
+		def content = ""
+		def status = ""
+		def cycleId = ""
+		def folderId = ""
+		def executionId = ""
+		def jsonSlurper = new groovy.json.JsonSlurperClassic()
+		// Get Project Version ID
+		if (cycleDict.size() == 0) {
+			(code, content) = sendGetRequest(jiraBaseURL+"/rest/api/latest/project/"+project+"/versions", username, password)
+			assert code == 200
+			jsonResponse = jsonSlurper.parseText(content)
+			projectId = jsonResponse.find {it.name == version}?.projectId
+			if (projectId == null) {
+				println("Cannot find version " + version)
+				return                        
+			}
+			versionId = jsonResponse.find {it.name == version}.id
+			
+			//println("projectId = " + projectId)
+			//println("versionId = " + versionId)                        
+		}
+		
+		if (cycleDict.size() == 0) {
+			(code, content) = sendGetRequest(jiraBaseURL+"/rest/zapi/latest/cycle?projectId="+projectId+"&versionId="+versionId, username, password)
+			assert code == 200
+			jsonResponse = jsonSlurper.parseText(content)
+			cycleDict = jsonResponse
+		}
+		cycleId = cycleDict.findAll {it.key != "recordsCount"}.find{it.value.name == cycle}?.key
+		if (cycleId == null) {
+			println("Cannot find cycle " + cycle)
+			return
+		}
+		
+		//println("cycleId = " + cycleId)
+			
+		// Get Folder ID                    
+		(code, content) = sendGetRequest(jiraBaseURL+"/rest/zapi/latest/cycle/"+cycleId+"/folders?projectId="+projectId+"&versionId="+versionId, username, password)
+		assert code == 200
+		jsonResponse = jsonSlurper.parseText(content)
+		folderId = jsonResponse.find {it.folderName == folder}?.folderId
+		if (folderId == null) {
+			folderId = ""
+		}
+		
+		//println("folderId = " + folderId)
+		
+		//Get execution id
+		println("--------------------------------------------------")
+		(code, content) = sendGetRequest(jiraBaseURL+"/rest/zapi/latest/execution?cycleId="+cycleId+"&folderId="+folderId, username, password)
+		assert code == 200
+		executions = jsonSlurper.parseText(content).executions
+		if (executions.size() > 0) {
+			def xml = readFile junitFile
+			def testcases = new groovy.util.XmlParser().parseText(xml).value()
+			//def testcases = new groovy.util.XmlParser().parseText(xmlFile).testcase
+			testcases.each {
+				issue = it.attributes()['name']
+				failure = it.value()
+				//issue = it.@name
+				//failure = it.failure
+				executionId = executions.find {it.issueKey == issue}?.id
+				if (executionId != null) {
+					println("------------------------\nTest Case: " + issue + "\n------------------------")
+					status = "1"
+					if (!failure.isEmpty()) {
+						status = "2"
+					}
+					body = '{"status": "' + status + '"}'
+					(code, content) = sendPutRequest(jiraBaseURL+"/rest/zapi/latest/execution/"+executionId+"/execute", body, username, password)
+					assert code == 200
+				}
+			}
+			println("-----------------------------------------------------------------------------") 
+		} else {
+			println("No executions...")
+		}
 	}
 }
