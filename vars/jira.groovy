@@ -256,7 +256,7 @@ def updateJiraTestCaseStatus(jenkinsContext) {
 		
 		def username = ""
 		def password = ""
-		def creds = jenkinsContext.com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredentials(
+		def creds = com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredentials(
 			com.cloudbees.plugins.credentials.common.StandardUsernameCredentials.class,
 			jenkins.model.Jenkins.instance,
 			null,
