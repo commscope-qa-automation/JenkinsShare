@@ -37,49 +37,49 @@ def strJiraProjectVersion() {
 			def creds = com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredentials(
 				com.cloudbees.plugins.credentials.common.StandardUsernameCredentials.class,
 				Jenkins.instance,
-			null,
-			null
-		)
-		for (c in creds) {
-			if (c.id == "etrack_creds_" + user) {
-				username = c.username
-				password = c.password
-			}
-		}   
-		
-		def jiraBaseURL = "https://odart.arrisi.com"
-		def project = "ECOIOT"
-	
-		def projectId = ""
-		def versionId = ""
-		def versionNameId= [:]
-		def versionList = []
-		
-		def jsonSlurper = new JsonSlurper()
-		def url = jiraBaseURL+"/rest/api/latest/project/"+project+"/versions"
-		content = sendGetRequest(url, username, password)
-		jsonResponse = jsonSlurper.parseJson(content)
-		jsonResponse.each {
-			if (it.released == false) {
-				versionList.add(it.name)
-				projectId = it.projectId
-				versionId = it.id
-				versionNameId.put(it.name, versionId)
-			}
-		}
-	
-		def data = [
-			projectId: projectId,
-			versionNameId: versionNameId
-		]
-		def json_str = JsonOutput.toJson(data)
-		def json_beauty = JsonOutput.prettyPrint(json_str)                            	
+				null,
+				null
+			)
+			for (c in creds) {
+				if (c.id == "etrack_creds_" + user) {
+					username = c.username
+					password = c.password
+				}
+			}   
 			
-		File file = new File(filename)
-		file.write(json_beauty)
+			def jiraBaseURL = "https://odart.arrisi.com"
+			def project = "ECOIOT"
 		
-		return versionList
-	}                    
+			def projectId = ""
+			def versionId = ""
+			def versionNameId= [:]
+			def versionList = []
+			
+			def jsonSlurper = new JsonSlurper()
+			def url = jiraBaseURL+"/rest/api/latest/project/"+project+"/versions"
+			content = sendGetRequest(url, username, password)
+			jsonResponse = jsonSlurper.parseText(content)
+			jsonResponse.each {
+				if (it.released == false) {
+					versionList.add(it.name)
+					projectId = it.projectId
+					versionId = it.id
+					versionNameId.put(it.name, versionId)
+				}
+			}
+		
+			def data = [
+				projectId: projectId,
+				versionNameId: versionNameId
+			]
+			def json_str = JsonOutput.toJson(data)
+			def json_beauty = JsonOutput.prettyPrint(json_str)                            	
+				
+			File file = new File(filename)
+			file.write(json_beauty)
+			
+			return versionList
+		}                    
 	'''
 }
 
@@ -123,7 +123,7 @@ def strJiraProjectCycle() {
 		content = sendGetRequest(url, username, password)
 		//assert code == 200
 		
-		jsonResponse = jsonSlurper.parseJson(content)
+		jsonResponse = jsonSlurper.parseText(content)
 		jsonResponse.each {
 			if (it.key != "recordsCount") {
 				cycleNameList.add(it.value.name)
@@ -185,12 +185,12 @@ def strJiraProjectFolder() {
 		content = sendGetRequest(url, username, password)
 		//assert code == 200
 		
-		jsonResponse = jsonSlurper.parseJson(content)
+		jsonResponse = jsonSlurper.parseText(content)
 		jsonResponse.each {
 			folderNameList.add(it.folderName)
 		}
 		
-		return folderNameList                   
+		return folderNameList                        
 	'''    
 }
 
