@@ -1,4 +1,6 @@
 def executeRF(def script) {
+    println("TestSuite: " + script.params.TestSuiteName)
+    
     if (script.param.TestSuiteName.contains("ECOControl")) {
         script.env.ACS = "ECOControl"
     } else {
@@ -13,7 +15,7 @@ def executeRF(def script) {
     script.env.DOCKER_IMAGE_FULL = DOCKER_HOST_PORT + "/" + DOCKER_IMAGE + ":" + DOCKER_IMAGE_TAG
     script.env.DOCKER_CONTAINER = "robot-docker-container"	+ "-" + script.env.LOGIN_USER
 
-    println("TestSuite: " + script.params.TestSuiteName)
+    
     if (script.params.TestSuiteName != "") {
         if (script.params.TestCaseRunFilter1 == "") {
             script.env.TestCaseRunFilter = script.params.TestCaseRunFilter2
