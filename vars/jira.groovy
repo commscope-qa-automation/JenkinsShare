@@ -337,6 +337,7 @@ def updateJiraTestCaseStatus(loginUser, workspace, outputDir, projectList) {
 		//println("folderId = " + folderId)
 
 		// Get Robot Framework junit file name
+		println(testCount)
 		if (testCount == 4) {
 			def fileName = testsuiteName
 		} else {
