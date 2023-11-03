@@ -13,7 +13,7 @@ def executeRF(def script) {
     def DOCKER_IMAGE = "robot-docker"	
     def DOCKER_IMAGE_TAG = "1"	
     script.env.DOCKER_IMAGE_FULL = DOCKER_HOST_PORT + "/" + DOCKER_IMAGE + ":" + DOCKER_IMAGE_TAG
-    script.env.DOCKER_CONTAINER = "robot-docker-container"	+ "-" + script.env.LOGIN_USER
+    script.env.DOCKER_CONTAINER = "robot-docker-container"	+ "-" + script.LOGIN_USER
 
     
     if (script.params.TestSuiteName != "") {
