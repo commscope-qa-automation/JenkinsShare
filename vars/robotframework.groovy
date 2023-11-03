@@ -1,16 +1,16 @@
-def copyTestDataFilesWindows(workFlowScript wfs) {
-    wfs.bat '''
-        if exist "%LOCAL_WORKSPACE%TestData_Custom" ( 
-            echo TestData directory %LOCAL_WORKSPACE%TestData_Custom exists 								
-        ) else ( 
-            echo Copy %LOCAL_WORKSPACE%workspace/ECOManageRobotProject/TestData_Data/TestData_ to %LOCAL_WORKSPACE%TestData_Custom
-            xcopy "%LOCAL_WORKSPACE%workspace/ECOManageRobotProject/TestData_Custom" "%LOCAL_WORKSPACE%TestData_Custom" /E /I
-        )
-    '''
+// def copyTestDataFilesWindows(def wfs) {
+//     wfs.bat '''
+//         if exist "%LOCAL_WORKSPACE%TestData_Custom" ( 
+//             echo TestData directory %LOCAL_WORKSPACE%TestData_Custom exists 								
+//         ) else ( 
+//             echo Copy %LOCAL_WORKSPACE%workspace/ECOManageRobotProject/TestData_Data/TestData_ to %LOCAL_WORKSPACE%TestData_Custom
+//             xcopy "%LOCAL_WORKSPACE%workspace/ECOManageRobotProject/TestData_Custom" "%LOCAL_WORKSPACE%TestData_Custom" /E /I
+//         )
+//     '''
 
-}
+// }
 
-def executeRFLinux(workFlowScript wfs) {
+def executeRFLinux(def wfs) {
     def TestSuiteName = wfs.params.TestSuiteName
     def TestCaseRunFilter = wfs.env.TestCaseRunFilter
     def LOCAL_WORKSPACE = wfs.env.WORKSPACE.split("workspace")[0]
@@ -90,7 +90,7 @@ def executeRFLinux(workFlowScript wfs) {
     '''    
 }
 
-def executeRFWindows(workFlowScript wfs) {
+def executeRFWindows(def wfs) {
     def TestSuiteName = wfs.params.TestSuiteName
     def TestCaseRunFilter = wfs.env.TestCaseRunFilter
     def LOCAL_WORKSPACE = env.WORKSPACE.split("workspace")[0]
