@@ -338,13 +338,14 @@ def updateJiraTestCaseStatus(loginUser, workspace, outputDir, projectList) {
 
 		// Get Robot Framework junit file name
 		println(testCount)
+		def fileName
 		if (testCount == 4) {
-			def fileName = testsuiteName
+			fileName = testsuiteName
 		} else {
-			def fileName = testsuiteName + "_" + cycle.replaceAll(" ", "") + "_" + folder.replaceAll(" ", "")
+			fileName = testsuiteName + "_" + cycle.replaceAll(" ", "") + "_" + folder.replaceAll(" ", "")
 		}
 		def junitFile = workspace + "/" + outputDir + "/" + fileName + "_junit.xml"
-		//println("junit xml file: " + junitFile)
+		println("junit xml file: " + junitFile)
 
 		//Get execution id and update test execution status
 		println("--------------------------------------------------")
