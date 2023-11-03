@@ -1,7 +1,7 @@
 def executeRF(def script) {
     println("TestSuite: " + script.params.TestSuiteName)
     
-    if (script.param.TestSuiteName.contains("ECOControl")) {
+    if (script.params.TestSuiteName.contains("ECOControl")) {
         script.env.ACS = "ECOControl"
     } else {
         script.env.ACS = "ECOManage"
