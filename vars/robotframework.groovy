@@ -1,27 +1,28 @@
-def executeRF(def wfs) {
-    if (wfs.param.TestSuiteName.contains("ECOControl")) {
-        wfs.env.ACS = "ECOControl"
+def executeRF(def script) {
+    if (script.param.TestSuiteName.contains("ECOControl")) {
+        script.env.ACS = "ECOControl"
     } else {
-        wfs.env.ACS = "ECOManage"
+        script.env.ACS = "ECOManage"
     }
 
-    wfs.env.RF_RESULT_DIR = "workspace/" + wfs.env.JOB_NAME + "/" + wfs.env.RF_OUTPUT_DIR
+    script.env.RF_RESULT_DIR = "workspace/" + script.env.JOB_NAME + "/" + script.env.RF_OUTPUT_DIR
 
     def DOCKER_HOST_PORT = "nexus.qa.ps.arris.com:9001"	
     def DOCKER_IMAGE = "robot-docker"	
     def DOCKER_IMAGE_TAG = "1"	
-    wfs.env.DOCKER_IMAGE_FULL = DOCKER_HOST_PORT + "/" + DOCKER_IMAGE + ":" + DOCKER_IMAGE_TAG
-    wfs.env.DOCKER_CONTAINER = "robot-docker-container"	+ "-" + wfs.env.LOGIN_USER
+    script.env.DOCKER_IMAGE_FULL = DOCKER_HOST_PORT + "/" + DOCKER_IMAGE + ":" + DOCKER_IMAGE_TAG
+    script.env.DOCKER_CONTAINER = "robot-docker-container"	+ "-" + script.env.LOGIN_USER
 
-    if (wfs.params.TestSuiteName != "") {
-        if (wfs.params.TestCaseRunFilter1 == "") {
-            wfs.env.TestCaseRunFilter = wfs.params.TestCaseRunFilter2
+    println("TestSuite: " + script.params.TestSuiteName)
+    if (script.params.TestSuiteName != "") {
+        if (script.params.TestCaseRunFilter1 == "") {
+            script.env.TestCaseRunFilter = script.params.TestCaseRunFilter2
         } else {
-            wfs.env.TestCaseRunFilter = wfs.params.TestCaseRunFilter1.split(",").collect { "-t " + it }.join(" ")
+            script.env.TestCaseRunFilter = script.params.TestCaseRunFilter1.split(",").collect { "-t " + it }.join(" ")
         }
 
-        if (wfs.isUnix()) {
-            wfs.sh '''
+        if (script.isUnix()) {
+            script.sh '''
             exeTCInDocker () {
                 echo Start Robot Framework automation in docker container
                 if [ -z "${TestDataFileName}" ] 
@@ -79,7 +80,7 @@ def executeRF(def wfs) {
             fi
             '''    
         } else { //Windows
-            wfs.bat '''
+            script.bat '''
                 SETLOCAL ENABLEDELAYEDEXPANSION
 
                 echo --------------------------------------------
