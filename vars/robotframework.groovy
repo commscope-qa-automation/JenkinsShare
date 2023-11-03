@@ -15,7 +15,7 @@ def executeRFLinux(def wfs) {
     def TestCaseRunFilter = wfs.env.TestCaseRunFilter
     def LOCAL_WORKSPACE = wfs.env.WORKSPACE.split("workspace")[0]
     def RESULT_DIR="workspace/" + wfs.env.JOB_NAME + "/" + wfs.params.OutputDir	
-    def PREFIX = wfs.evn.PREFIX	
+    def PREFIX = wfs.env.PREFIX	
     def CUSTOMER = wfs.env.CUSTOMER			
 
     def ACS = ""
@@ -95,7 +95,7 @@ def executeRFWindows(def wfs) {
     def TestCaseRunFilter = wfs.env.TestCaseRunFilter
     def LOCAL_WORKSPACE = env.WORKSPACE.split("workspace")[0]
     def RESULT_DIR="workspace/" + wfs.env.JOB_NAME + "/" + wfs.params.OutputDir	
-    def PREFIX = wfs.evn.PREFIX	
+    def PREFIX = wfs.env.PREFIX	
     def CUSTOMER = wfs.env.CUSTOMER			
 
     def ACS = ""
