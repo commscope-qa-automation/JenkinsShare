@@ -12,7 +12,7 @@ def copyTestDataFilesWindows(workFlowScript wfs) {
 
 def executeRFLinux(workFlowScript wfs) {
     def TestSuiteName = wfs.params.TestSuiteName
-    def TestCaseRunFilter = wfs.params.TestCaseRunFilter
+    def TestCaseRunFilter = wfs.env.TestCaseRunFilter
     def LOCAL_WORKSPACE = env.WORKSPACE.split("workspace")[0]
     def RESULT_DIR="workspace/" + wfs.env.JOB_NAME + "/" + wfs.params.OutputDir	
     def PREFIX = wfs.evn.PREFIX	
@@ -92,7 +92,7 @@ def executeRFLinux(workFlowScript wfs) {
 
 def executeRFWindows(workFlowScript wfs) {
     def TestSuiteName = wfs.params.TestSuiteName
-    def TestCaseRunFilter = wfs.params.TestCaseRunFilter
+    def TestCaseRunFilter = wfs.env.TestCaseRunFilter
     def LOCAL_WORKSPACE = env.WORKSPACE.split("workspace")[0]
     def RESULT_DIR="workspace/" + wfs.env.JOB_NAME + "/" + wfs.params.OutputDir	
     def PREFIX = wfs.evn.PREFIX	
