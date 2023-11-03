@@ -243,20 +243,18 @@ def updateJiraTestCaseStatus(loginUser, workspace, outputDir, projectList) {
 	def password = ""	
 	def jiraBaseURL = "https://odart.arrisi.com"
 	def project = "ECOIOT"
+	def testCount = projectList.size()
 
-	for (i = 0 ; i < projectList.size() ; i += 4) {
+	for (i = 0 ; i < testCount ; i += 4) {
 		/*
 		########################################################################
-		Get values from build parameters
+		Get values from input arguments
 		########################################################################
 		*/
 		def version = projectList[i]
 		def cycle = projectList[i+1]
 		def folder = projectList[i+2]
 		def testsuiteName= projectList[i+3]
-
-		def junitFile = workspace + "/" + outputDir + "/" + testsuiteName + "_" + cycle.replaceAll(" ", "") + "_" + folder.replaceAll(" ", "") + "_junit.xml"
-		//println("junit xml file: " + junitFile)
 		/*
 		########################################################################
 		Start processing
@@ -269,8 +267,8 @@ def updateJiraTestCaseStatus(loginUser, workspace, outputDir, projectList) {
 			return
 		}
 		
-		if (username == "") {
-			// Get JIRA username and password from global credentials
+		// Get JIRA username and password from global credentials based on the login user
+		if (username == "") {			
 			println("Get JIRA credentials.")
 			//println("LOGIN_USER:" + loginUser)		
 
@@ -292,8 +290,7 @@ def updateJiraTestCaseStatus(loginUser, workspace, outputDir, projectList) {
 		
 		// Update JIRA test case status
 		println("Start updating JIRA test case status.")
-		
-		// Read the junit file generated from Robot Framework
+
 		def issue = ""
 		def code = 0
 		def content = ""
@@ -338,8 +335,17 @@ def updateJiraTestCaseStatus(loginUser, workspace, outputDir, projectList) {
 			folderId = ""
 		}		
 		//println("folderId = " + folderId)
-		
-		//Get execution id
+
+		// Get Robot Framework junit file name
+		if (testCount == 4) {
+			def fileName = testsuiteName
+		} else {
+			def fileName = testsuiteName + "_" + cycle.replaceAll(" ", "") + "_" + folder.replaceAll(" ", "")
+		}
+		def junitFile = workspace + "/" + outputDir + "/" + fileName + "_junit.xml"
+		//println("junit xml file: " + junitFile)
+
+		//Get execution id and update test execution status
 		println("--------------------------------------------------")
 		(code, content) = sendGetRequest(jiraBaseURL+"/rest/zapi/latest/execution?cycleId="+cycleId+"&folderId="+folderId, username, password)
 		assert code == 200
@@ -350,8 +356,6 @@ def updateJiraTestCaseStatus(loginUser, workspace, outputDir, projectList) {
 			testcases.each {
 				issue = it.attributes()['name']
 				failure = it.value()
-				//issue = it.@name
-				//failure = it.failure
 				executionId = executions.find {it.issueKey == issue}?.id
 				if (executionId != null) {
 					println("------------------------\nTest Case: " + issue + "\n------------------------")
