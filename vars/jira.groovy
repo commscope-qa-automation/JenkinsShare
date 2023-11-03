@@ -255,7 +255,7 @@ def updateJiraTestCaseStatus(loginUser, workspace, outputDir, projectList) {
 		def folder = projectList[i+2]
 		def testsuiteName= projectList[i+3]
 
-		def junitFile = workspace + "/" + outputDir + "/" + testsuiteName + "_" + cycle.replaceAll(" ", "") + "_junit.xml"
+		def junitFile = workspace + "/" + outputDir + "/" + testsuiteName + "_" + cycle.replaceAll(" ", "") + "_" + folder.replaceAll(" ", "") + "_junit.xml"
 		//println("junit xml file: " + junitFile)
 		/*
 		########################################################################
