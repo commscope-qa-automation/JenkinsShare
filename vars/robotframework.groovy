@@ -11,12 +11,6 @@
 // }
 
 def executeRFLinux(def wfs) {
-    def TestSuiteName = wfs.params.TestSuiteName
-    def TestCaseRunFilter = wfs.env.TestCaseRunFilter
-    def LOCAL_WORKSPACE = wfs.env.WORKSPACE.split("workspace")[0]
-    def RESULT_DIR="workspace/" + wfs.env.JOB_NAME + "/" + wfs.params.OutputDir	
-    def PREFIX = wfs.env.PREFIX	
-    def CUSTOMER = wfs.env.CUSTOMER			
 
     def ACS = ""
     if (TestSuiteName.contains("ECOControl")) {
@@ -30,6 +24,8 @@ def executeRFLinux(def wfs) {
     def DOCKER_IMAGE_TAG = "1"	
     def DOCKER_IMAGE_FULL = DOCKER_HOST_PORT + "/" + DOCKER_IMAGE + ":" + DOCKER_IMAGE_TAG
     def DOCKER_CONTAINER = "robot-docker-container"	+ "-" + wfs.env.LOGIN_USER
+
+    wfs.env.DOCKER_CONTAINER = "robot-docker-container"	+ "-" + wfs.env.LOGIN_USER
 
     wfs.sh '''
     exeTCInDocker () {
