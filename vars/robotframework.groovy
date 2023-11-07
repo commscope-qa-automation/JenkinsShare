@@ -268,8 +268,8 @@ def executeRFMultiple(def script, dataList) {
 
     // Combine all the test results
     if (script.isUnix()) {
-        sh 'docker exec ${DOCKER_CONTAINER} rebot --processemptysuite --outputdir "${RF_RESULT_DIR}" --output Final_output.xml --report Final_report.html --xunit Final_junit.xml --merge ${RESULT_DIR}/*_output.xml'
+        sh 'docker exec ${DOCKER_CONTAINER} rebot --processemptysuite --outputdir "${RF_RESULT_DIR}" --output Final_output.xml --report Final_report.html --xunit Final_junit.xml --merge ${RF_RESULT_DIR}/*_output.xml'
     } else {
-        bat 'docker exec %DOCKER_CONTAINER% rebot --processemptysuite --outputdir "%RF_RESULT_DIR%" --output Final_output.xml --report Final_report.html --xunit Final_junit.xml --merge %RESULT_DIR%/*_output.xml'
+        bat 'docker exec %DOCKER_CONTAINER% rebot --processemptysuite --outputdir "%RF_RESULT_DIR%" --output Final_output.xml --report Final_report.html --xunit Final_junit.xml --merge %RF_RESULT_DIR%/*_output.xml'
     }  
 }
