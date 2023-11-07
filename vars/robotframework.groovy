@@ -154,7 +154,7 @@ def executeRF(def script) {
 }
 
 def executeRFMultiple(def script, dataList) {
-    println("Started robot framework test execution...")
+    println(dataList)
     script.env.RF_RESULT_DIR = "workspace/" + script.env.JOB_NAME + "/" + script.env.RF_OUTPUT_DIR
 
     def DOCKER_HOST_PORT = "nexus.qa.ps.arris.com:9001"	
@@ -236,10 +236,12 @@ def executeRFMultiple(def script, dataList) {
     }
 
     // Execute in docker
-    for ( i = 0; i < dataList.size(); i += 3) {
+    for ( i = 0; i < dataList.size(); i += 5) {
         script.env.TestDataFileName = dataList[i]
         script.env.TestSuiteName = dataList[i+1]
         script.env.TestCaseRunFilter = dataList[i+2]
+        script.env.ProjectCycle = dataList[i+3]
+        script.env.ProjectFolder = dataList[i+4]                
         script.env.RF_PREFIX = script.env.TestSuiteName + "_" + script.env.ProjectCycle.replaceAll(" ", "") + "_" + script.env.ProjectFolder.replaceAll(" ", "")
 
         if (script.env.TestSuiteName.contains("ECOControl")) {
