@@ -337,13 +337,14 @@ def updateJiraTestCaseStatus(loginUser, workspace, outputDir, projectList) {
 		//println("folderId = " + folderId)
 
 		// Get Robot Framework junit file name
-		println(testCount)
+		// println(testCount)
 		def fileName = ""
-		if (testCount == 4) {
-			fileName = testsuiteName
-		} else {
-			fileName = testsuiteName + "_" + cycle.replaceAll(" ", "") + "_" + folder.replaceAll(" ", "")
-		}
+		// if (testCount < 4) {
+		// 	fileName = testsuiteName
+		// } else {
+		// 	fileName = testsuiteName + "_" + cycle.replaceAll(" ", "") + "_" + folder.replaceAll(" ", "")
+		// }
+		fileName = testsuiteName + "_" + cycle.replaceAll(" ", "") + "_" + folder.replaceAll(" ", "")
 		def junitFile = workspace + "/" + outputDir + "/" + fileName + "_junit.xml"
 		println("junit xml file: " + junitFile)
 
