@@ -241,7 +241,7 @@ def updateJiraTestCaseStatus(loginUser, workspace, outputDir, projectList) {
 	def versionId = ""
 	def username = ""
 	def password = ""	
-	def jiraBaseURL = "https://odart.arrisi.com"
+	def jiraBaseURL = "https://odart-va.arrisi.com"
 	def project = "ECOIOT"
 	def testCount = projectList.size()
 
