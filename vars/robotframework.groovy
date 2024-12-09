@@ -7,6 +7,7 @@ def executeRF(def script) {
     def DOCKER_IMAGE_TAG = "1"	
     script.env.DOCKER_IMAGE_FULL = DOCKER_HOST_PORT + "/" + DOCKER_IMAGE + ":" + DOCKER_IMAGE_TAG
     script.env.DOCKER_CONTAINER = "robot-docker-container"	+ "-" + script.env.LOGIN_USER
+    script.env.LOCAL_WORKSPACE = script.env.WORKSPACE.split("workspace")[0]
 
     if (script.params.TestSuiteName.contains("ECOControl")) {
         script.env.ACS = "ECOControl"

@@ -97,7 +97,7 @@ def strJiraProjectCycle() {
 		def jsonSlurper = new JsonSlurper()
 		def data = jsonSlurper.parse(new File(filename))
 		
-		def jiraBaseURL = "https://odart.arrisi.com"
+		def jiraBaseURL = "https://jira-hn.vantiva.com"
 		def projectId =  data["projectId"]
 		def versionId = data["versionNameId"][ProjectVersion]
 		def cycleNameId = [:]
@@ -159,7 +159,7 @@ def strJiraProjectFolder() {
 		def jsonSlurper = new JsonSlurper()
 		def data = jsonSlurper.parse(new File(filename))
 		
-		def jiraBaseURL = "https://odart.arrisi.com"
+		def jiraBaseURL = "https://jira-hn.vantiva.com"
 		def projectId =  data["projectId"]
 		def versionId = data["versionId"]
 		def cycleId = data["cycleNameId"][ProjectCycle]
@@ -241,7 +241,7 @@ def updateJiraTestCaseStatus(loginUser, workspace, outputDir, projectList) {
 	def versionId = ""
 	def username = ""
 	def password = ""	
-	def jiraBaseURL = "https://odart-va.arrisi.com"
+	def jiraBaseURL = "https://jira-hn.vantiva.com"
 	def project = "ECOIOT"
 	def testCount = projectList.size()
 
