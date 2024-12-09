@@ -47,7 +47,7 @@ def strJiraProjectVersion() {
 				}
 			}   
 			
-			def jiraBaseURL = "https://odart.arrisi.com"
+			def jiraBaseURL = "https://jira-hn.vantiva.com"
 			def project = "ECOIOT"
 		
 			def projectId = ""
