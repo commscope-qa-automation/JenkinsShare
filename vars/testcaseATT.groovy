@@ -18,7 +18,7 @@ def getTestSuite () {
         "RGFMECO134Docker",
         "FirmwareUpgrade",
         "RG5268AC",
-        "TestSuite_ECOControlGUI",
+        "ECOControlGUI",
         "ECOControlCR1737EventNotification"
         ]
     '''
@@ -431,7 +431,7 @@ def getTestCase() {
                 "ECOIOT-6699",
                 "ECOIOT-6700"							
             ]	
-        }else if (TestSuiteName == "ECOControlCR1737EventNotification") {
+        } else if (TestSuiteName == "ECOControlCR1737EventNotification") {
             return [
                 "",
                 "ECOIOT-6373",
