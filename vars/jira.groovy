@@ -79,7 +79,9 @@ def strJiraProjectVersion() {
 			file.write(json_beauty)
 			
 			return versionList
-		}                    
+		} else {
+			return ["no project version"]
+		}               
 	'''
 }
 
